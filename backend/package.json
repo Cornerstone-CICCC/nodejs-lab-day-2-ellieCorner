@@ -1,10 +1,9 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "dist/src.js",
+  "main": "dist/server.js",
   "scripts": {
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon dist/server.js\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "concurrently \"npx tsc --watch\" \"nodemon dist/server.js\""
   },
   "keywords": [],
   "author": "",

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+  <div class="container">
+    <h1>Register</h1>
+    <form id="registerForm">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <div class="form-group">
+        <label for="firstname">First Name</label>
+        <input type="text" id="firstname" name="firstname" required>
+      </div>
+      <div class="form-group">
+        <label for="lastname">Last Name</label>
+        <input type="text" id="lastname" name="lastname" required>
+      </div>
+      <button type="submit">Register</button>
+      <div id="message"></div>
+    </form>
+    <p class="link-text">
+      Already have an account? <a href="/login">Login here</a>
+    </p>
+  </div>
+
+  <script>
+    const form = document.getElementById('registerForm') as HTMLFormElement;
+    const messageDiv = document.getElementById('message') as HTMLDivElement;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const username = formData.get('username') as string;
+      const password = formData.get('password') as string;
+      const firstname = formData.get('firstname') as string;
+      const lastname = formData.get('lastname') as string;
+
+      try {
+        const response = await fetch('http://localhost:4500/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify({ username, password, firstname, lastname })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          messageDiv.className = 'success';
+          messageDiv.textContent = 'Registration successful! Redirecting to login...';
+          setTimeout(() => {
+            window.location.href = '/login';
+          }, 1500);
+        } else {
+          messageDiv.className = 'error';
+          messageDiv.textContent = data.message || 'Registration failed';
+        }
+      } catch (error) {
+        messageDiv.className = 'error';
+        messageDiv.textContent = 'Network error. Please try again.';
+      }
+    });
+  </script>
+</body>
+</html>

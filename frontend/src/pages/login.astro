@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Ellie Website</title>
+</head>
+<body>
+    <div>
+        <h1>Login to Ellie Website</h1>
+        <form id="form">
+            <div>
+                <label for="username">Username:</label>
+                <input id="username" name="username" type="text" placeholder="username" required />
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input id="password" name="password" type="password" placeholder="password" required />
+            </div>
+            <button type="submit">Login</button>
+            <div class="message"></div>
+        </form>
+        <p>
+            Don't have an account? <a href="/signup">Sign Up</a>
+        </p>
+        <a href="profile">Go to Profile</a>
+    </div>
+    <script>
+        const form = document.getElementById('form') as HTMLFormElement;
+        const messageDiv = document.querySelector('.message') as HTMLDivElement;
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+            const username = formData.get('username') as string;
+            const password = formData.get('password') as string;
+
+            try {
+                const response = await fetch(`http://localhost:4500/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ username, password }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    messageDiv.textContent = 'Login successful! Redirecting...';
+                    messageDiv.style.color = 'green';
+                    
+                    setTimeout(() => {
+                        window.location.href = '/profile';
+                    }, 1000);
+                } else {
+                    messageDiv.textContent = data.message || 'Login failed';
+                    messageDiv.style.color = 'red';
+                }
+            } catch (error) {
+                messageDiv.textContent = 'An error occurred';
+                messageDiv.style.color = 'red';
+            }
+        });
+    </script>
+</body>
+</html>
